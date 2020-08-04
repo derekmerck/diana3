@@ -1,3 +1,5 @@
+from enum import Enum
+import logging
 from multiprocessing import Process
 from functools import partial
 from diana.endpoint.daemons.watcher import *
@@ -19,8 +21,7 @@ class MockObservable(ObservableMixin):
         s = f"{self._uuid.hex[0:8]} says var={var} and data={data}"
         print(s)
 
-
-if __name__ == "__main__":
+def test_watcher():
     mock = MockObservable()
 
     # When "mock" generates a "CHANGED" event, print the data
@@ -47,3 +48,8 @@ if __name__ == "__main__":
     time.sleep(5.0)  # Should print hello a few times, once a second
 
     process.terminate()
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+    test_watcher()

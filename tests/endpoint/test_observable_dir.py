@@ -20,4 +20,8 @@ if __name__ == "__main__":
         Path(f"{fp}/test").touch()
         logging.debug(os.listdir(fp))
 
-        time.sleep(3.0)
+        time.sleep(2.0)
+
+        events = O.changes()
+
+    assert(len(events)>0)
