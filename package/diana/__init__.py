@@ -1,0 +1,6 @@
+__name__ = "diana"
+__version__ = "3.2.1"
+__author__ = "Derek Merck"
+__author_email__ = "derek.merck@ufl.edu"
+__desc__ = "DICOM Analytics and Archive - DIANA."
+__url__ = "https://github.com/derekmerck/diana3"
