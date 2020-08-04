@@ -1,0 +1,10 @@
+# endpoint reqs
+attrs
+pyyaml
+requests
+python-dateutil
+redis
+
+# diana reqs
+pydicom
+numpy
