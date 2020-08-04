@@ -1,2 +1,3 @@
 FROM python:latest
-CMD pip3 install https://github.com/derekmerck/diana3#subdirectory=package
+RUN git clone --recurse-submodules https://github.com/derekmerck/diana3 /opt/diana
+RUN pip install -e /opt/diana/package

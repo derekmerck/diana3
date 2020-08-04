@@ -1,6 +1,10 @@
 from multiprocessing import Process
 from functools import partial
-from diana.endpoint.watcher import *
+from diana.endpoint.daemons.watcher import *
+
+
+class EventType(Enum):
+    CHANGED = "changed"
 
 
 class MockObservable(ObservableMixin):

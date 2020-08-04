@@ -5,7 +5,7 @@ $ docker run --rm --name my_redis -p 6379:6379 -d redis
 from diana.endpoint import PersistenceBackend
 # This is not directly imported in the module init to
 # avoid unnecessary dependency on Redis
-from diana.endpoint.redis_persistence import RedisPersistenceBackend
+from diana.endpoint.persistence.redis_persistence import RedisPersistenceBackend
 
 
 def test_persistence(PBE: PersistenceBackend.__class__):
