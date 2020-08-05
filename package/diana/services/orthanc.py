@@ -26,6 +26,11 @@ class Orthanc(Endpoint, RestAgent, Serializable):
     def setup_new_session(self) -> requests.Session:
         pass
 
+    def status(self) -> bool:
+        resource = "system"
+        r = self.request(resource)
+        return r is not None
+
     def get(self, oid: UID, dlvl: DLv = DLv.STUDY, binary: bool = False) -> Dixel:
         resource = f"{dlvl.to_orthanc_resource()}/{oid}"
         tags = self.request(resource, "get")
@@ -42,6 +47,9 @@ class Orthanc(Endpoint, RestAgent, Serializable):
         return d
 
     def find(self, query: typ.Dict, *args, **kwargs) -> typ.List[UID]:
+        raise NotImplementedError
+
+    def rfind(self, query: typ.Dict, remote_node: str, retrieve=False) -> typ.List[typ.Dict]:
         raise NotImplementedError
 
     def put(self, dixel: Dixel, *args, **kwargs):
@@ -68,7 +76,5 @@ class Orthanc(Endpoint, RestAgent, Serializable):
         for oid in studies:
             self.delete(oid)
 
-    def status(self) -> bool:
-        resource = "system"
-        r = self.request(resource)
-        return r is not None
+
+Serializable.Factory.register(Orthanc)

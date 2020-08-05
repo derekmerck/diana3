@@ -67,9 +67,13 @@ class Dixel(DataItem, Hashable):
         return hashlib.sha3_224(_bytes).hexdigest()
 
     def mk_dhash(self):
+        if self.data is None:
+            return None
         return hashlib.sha3_224(self.data).hexdigest()
 
     def mk_bhash(self):
+        if self.binary is None:
+            return None
         return hashlib.sha3_224(self.binary).hexdigest()
 
     @classmethod

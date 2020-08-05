@@ -31,10 +31,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     license='MIT',
-    install_requires=reqs
-    # entry_points='''
-    #     [console_scripts]
-    #     diana-cmd=diana.cmdr:main
-    #     diana-cli=diana.cli:main
-    # '''
+    install_requires=reqs,
+    entry_points='''
+        [console_scripts]
+        diana-cli=diana.cli.cli:main
+    '''
 )

@@ -11,6 +11,8 @@ def test_from_file():
     d = Dixel.from_file(os.path.join(fp, fn))
     assert d.tags["PatientID"] == "123456789"
 
+    print(d)
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)

@@ -5,6 +5,7 @@ import time
 import tempfile
 from diana.endpoint.daemons.observable_dir import ObservableDirectory
 
+
 def test_observable_dir():
 
     with tempfile.TemporaryDirectory() as fp:
@@ -30,4 +31,3 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
     test_observable_dir()
-

@@ -21,6 +21,7 @@ class MockObservable(ObservableMixin):
         s = f"{self._uuid.hex[0:8]} says var={var} and data={data}"
         print(s)
 
+
 def test_watcher(capsys):
     mock = MockObservable()
 

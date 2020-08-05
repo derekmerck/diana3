@@ -14,6 +14,9 @@ class DicomDirectory(Endpoint, Serializable):
 
     root: PathLike = attr.ib(default=None, converter=pathlib.Path)
 
+    def status(self):
+        return os.path.isdir(self.root)
+
     def get(self, fp: PathLike, binary: bool = False, **kwargs) -> Dixel:
         _fp = self.root / fp
         d = Dixel.from_file(_fp, cache_binary=binary)
@@ -23,9 +26,16 @@ class DicomDirectory(Endpoint, Serializable):
         _fp = self.root / fp
         dixel.write_file(_fp)
 
-    # TODO: test with nested dirs
-    def inventory(self):
+    def inventory(self, relative=True):
+        """If loading with a DicomDir rooted here, return relative paths"""
         res = []
         for root, dirs, files in os.walk(self.root):
-            res = [f for f in files]
+            for f in files:
+                fp = os.path.join(root, f)  # abs
+                if relative:
+                    fp = os.path.relpath(fp, self.root)  # rel
+                res.append(fp)
         return res
+
+
+Serializable.Factory.register(DicomDirectory)

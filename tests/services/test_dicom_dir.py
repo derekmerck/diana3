@@ -1,3 +1,5 @@
+import logging
+import tempfile
 from diana.dixel import Dixel
 from diana.services import DicomDirectory
 
@@ -18,6 +20,16 @@ def test_inventory():
     assert len(inv) > 100
 
 
+def test_status():
+    with tempfile.TemporaryDirectory() as tmp:
+        D = DicomDirectory(root=tmp)
+        assert( D.status() )
+
+    assert not D.status()
+
+
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    test_inventory()
+    test_status()
