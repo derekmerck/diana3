@@ -21,7 +21,7 @@ class MockObservable(ObservableMixin):
         s = f"{self._uuid.hex[0:8]} says var={var} and data={data}"
         print(s)
 
-def test_watcher():
+def test_watcher(capsys):
     mock = MockObservable()
 
     # When "mock" generates a "CHANGED" event, print the data
@@ -32,7 +32,7 @@ def test_watcher():
     )
 
     # When "mock" generates a "CHANGED" event, call a handler on
-    # the source with additoinal kwargs
+    # the source with additional kwargs
     t1 = Trigger(
         source=mock,
         event_type=EventType.CHANGED,
@@ -48,6 +48,9 @@ def test_watcher():
     time.sleep(5.0)  # Should print hello a few times, once a second
 
     process.terminate()
+
+    captured = capsys.readouterr()
+    assert "var=GOODBYE and data=hello" in captured.out
 
 
 if __name__ == "__main__":

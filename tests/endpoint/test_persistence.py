@@ -7,7 +7,9 @@ import attr
 from diana.endpoint import PersistenceBackend
 from diana.endpoint.persistence.redis_persistence import RedisPersistenceBackend
 
+import pytest
 
+@pytest.mark.parametrize("PBE", [PersistenceBackend, RedisPersistenceBackend])
 def test_persistence(PBE: PersistenceBackend.__class__):
     with tempfile.TemporaryFile() as tmp:
         # For a pickle be, these have to be synchronous b/c they only update on init

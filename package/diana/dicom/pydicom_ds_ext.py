@@ -15,7 +15,7 @@ values as a new Numpy array.
 import logging
 import pydicom
 import numpy as np
-from diana.utils.exception_handling_iter import ExceptionHandlingIterator
+from diana.endpoint.exception_handling_iter import ExceptionHandlingIterator
 
 
 def get_dict(ds: pydicom.Dataset) -> dict:
