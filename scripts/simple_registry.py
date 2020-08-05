@@ -1,15 +1,19 @@
 from pprint import pprint
 import logging
+from datetime import datetime
 import os
 import pathlib
 from diana.dicom import DLv, dicom_best_dt
 from diana.dixel import Dixel
 from diana.services import DicomDirectory
 
+#  What a terrible date format!
+# 142854 20200229  h:m:s y:m:d  ??
+
 logger = logging.getLogger("ExceptionHandlingIterator")
 logger.setLevel(logging.ERROR)
 
-D = DicomDirectory("/Users/derek/data/bdr_ibis")
+D = DicomDirectory("/data/incoming")
 file_names = D.inventory()
 
 studies   = dict()
@@ -17,13 +21,19 @@ series    = dict()
 instances = dict()
 
 for fn in file_names:
-    inst = D.get(fn)
+    try:
+        inst = D.get(fn)
+    except:
+        continue
     # print(inst.main_tags())
     instances[inst.mhash[0:6]] = inst.main_tags()
 
     ser = Dixel.from_tags(inst.main_tags(dlvl=DLv.SERIES), dlvl=DLv.SERIES)
     if not series.get(ser.mhash[0:6]):
-        best_dt = dicom_best_dt(ser.main_tags(dlvl=DLv.STUDY))
+        try:
+            best_dt = dicom_best_dt(ser.main_tags(dlvl=DLv.STUDY))
+        except:
+            best_dt = datetime.now()
         series[ser.mhash[0:6]] = {
             **ser.main_tags(),
             "n_insts": 1,
@@ -35,7 +45,10 @@ for fn in file_names:
 
     stu = Dixel.from_tags(inst.main_tags(dlvl=DLv.STUDY), dlvl=DLv.STUDY)
     if not studies.get(stu.mhash[0:6]):
-        best_dt = dicom_best_dt(stu.main_tags(dlvl=DLv.STUDY))
+        try:
+            best_dt = dicom_best_dt(stu.main_tags(dlvl=DLv.STUDY))
+        except:
+            best_dt = datetime.now()
         studies[stu.mhash[0:6]] = {
             **stu.main_tags(),
             "n_insts": 1,
