@@ -59,7 +59,7 @@ class Orthanc(Endpoint, RestAgent, Serializable):
         if not dixel.binary:
             raise ValueError("No file data found")
         resource = "instances"
-        r = self.request(resource, "post", data=dixel.file)
+        r = self.request(resource, "post", data=dixel.binary)
         return r
 
     def delete(self, oid: UID, dlvl: DLv = DLv.STUDY, **kwargs) -> bool:
@@ -78,19 +78,10 @@ class Orthanc(Endpoint, RestAgent, Serializable):
             self.delete(oid)
 
 
-def orthanc_hash(PatientID: str,
-                 StudyInstanceUID: str,
-                 SeriesInstanceUID=None,
-                 SOPInstanceUID=None) -> sha1:
-    if not SeriesInstanceUID:
-        s = "|".join([PatientID, StudyInstanceUID])
-    elif not SOPInstanceUID:
-        s = "|".join([PatientID, StudyInstanceUID, SeriesInstanceUID])
-    else:
-        s = "|".join([PatientID, StudyInstanceUID, SeriesInstanceUID, SOPInstanceUID])
+Serializable.Factory.register(Orthanc)
 
 
-def dixel_oid(dixel, dlvl: DLv = None):
+def dixel_oid(dixel: Dixel, dlvl: DLv = None):
     _dlvl = dlvl or dixel.dlvl
     if not dixel.tags.get("PatientID"):
         raise KeyError("No patient ID, cannot predict the oid")
@@ -108,5 +99,3 @@ def dixel_oid(dixel, dlvl: DLv = None):
 
 
 Dixel.oid = dixel_oid
-
-Orthanc.Factory.register()

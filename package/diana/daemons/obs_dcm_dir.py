@@ -1,5 +1,5 @@
 import attr
-from diana.endpoint import ObservableDirectory, FileEventType
+from diana.endpoint import ObservableDirectory, Serializable
 from diana.services import DicomDirectory
 
 
@@ -8,4 +8,4 @@ class ObservableDicomDir(DicomDirectory, ObservableDirectory):
     pass
 
 
-ObservableDicomDir.Factory.register()
+Serializable.Factory.register(ObservableDicomDir)

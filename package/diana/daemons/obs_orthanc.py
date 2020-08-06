@@ -1,7 +1,7 @@
 
 import typing as typ
 from enum import Enum
-from diana.endpoint import ObservableMixin, Event
+from diana.endpoint import ObservableMixin, Event, Serializable
 from diana.services import Orthanc
 
 
@@ -33,4 +33,4 @@ class ObservableOrthanc(Orthanc, ObservableMixin):
             return events
 
 
-ObservableOrthanc.Factory.register()
+Serializable.Factory.register(ObservableOrthanc)
