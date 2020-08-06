@@ -31,3 +31,6 @@ class ObservableOrthanc(Orthanc, ObservableMixin):
                 )
                 events.append(event)
             return events
+
+
+ObservableOrthanc.Factory.register()

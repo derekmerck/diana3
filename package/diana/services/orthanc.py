@@ -109,4 +109,4 @@ def dixel_oid(dixel, dlvl: DLv = None):
 
 Dixel.oid = dixel_oid
 
-Serializable.Factory.register(Orthanc)
+Orthanc.Factory.register()

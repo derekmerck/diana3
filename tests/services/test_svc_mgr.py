@@ -1,7 +1,6 @@
 from pprint import pprint
 from diana.endpoint import ServiceManager
 from diana.services import DicomDirectory, Orthanc  # Registers classes with factory
-# from diana.endpoint.persistence.redis_persistence import RedisPersistenceBackend
 
 service_text = \
 """

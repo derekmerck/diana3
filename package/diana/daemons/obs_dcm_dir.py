@@ -7,3 +7,5 @@ from diana.services import DicomDirectory
 class ObservableDicomDir(DicomDirectory, ObservableDirectory):
     pass
 
+
+ObservableDicomDir.Factory.register()

@@ -1,12 +1,10 @@
-
 import logging
 import itertools
-from io import BytesIO
 import numpy as np
 from diana.endpoint import DataItem, ComparatorType
 
 
-def test_cmp():
+def test_dynamic_cmp():
 
     _meta_a = {"id": "a"}
     _meta_b = {"id": "b"}

@@ -25,3 +25,6 @@ class ProxiedDicomNode(Orthanc):
             rr = self.get(r, dlvl=dlvl)
             res.append(rr)
         return res
+
+
+ProxiedDicomNode.Factory.register()

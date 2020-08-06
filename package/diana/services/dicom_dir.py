@@ -38,4 +38,4 @@ class DicomDirectory(Endpoint, Serializable):
         return res
 
 
-Serializable.Factory.register(DicomDirectory)
+DicomDirectory.Factory.register()

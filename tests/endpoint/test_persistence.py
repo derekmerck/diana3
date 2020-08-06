@@ -11,7 +11,7 @@ import pytest
 def test_persistence(PBE: PersistenceBackend.__class__):
 
     # should put pickle file in a tempfile so it can be cleaned up, but
-    # the extra arg interferes with repeatabity for redis
+    # the extra arg interferes with repeatability for redis
     # with tempfile.TemporaryFile() as tmp:
 
     # For a pickle be, these have to be synchronous b/c they only update on init
