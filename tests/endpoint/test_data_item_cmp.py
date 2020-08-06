@@ -1,32 +1,53 @@
 
 import logging
+import itertools
+from io import BytesIO
 import numpy as np
 from diana.endpoint import DataItem, ComparatorType
 
 
 def test_cmp():
 
-    a1 = DataItem(meta={"id": "a"}, data=np.array([1]))
-    A1 = DataItem(meta={"id": "a"}, data=np.array([1]))
-    a2 = DataItem(meta={"id": "a"}, data=np.array([2]))
-    b1 = DataItem(meta={"id": "b"}, data=np.array([1]))
-    b2 = DataItem(meta={"id": "b"}, data=np.array([2]))
+    _meta_a = {"id": "a"}
+    _meta_b = {"id": "b"}
 
-    assert ( a1 == a1 )
-    assert not ( a1 == A1 )
+    _data_1 = np.array([1])
+    _data_2 = np.array([2])
 
-    DataItem.comparator = ComparatorType.DATA
-    assert ( a1 == A1 )
-    assert ( a1 == b1 )
-    assert ( a2 == b2 )
-    assert not ( a1 == a2 )
-    assert not ( a1 == b2 )
-    assert not ( a1 == b2 )
+    _file_1 = b"12345678"
+    _file_2 = b"abcdefgh"
 
-    DataItem.comparator = ComparatorType.METADATA
-    assert ( a1 == A1 )
-    assert ( a1 == a2 )
-    assert not ( a1 == b1 )
+    cross = itertools.product( [_meta_a, _meta_b],
+                               [_data_1, _data_2],
+                               [_file_1, _file_2] )
+    perms = itertools.permutations(cross, 2)
+
+    def comparisons( args1, args2 ):
+        a = DataItem(meta=args1[0], data=args1[1], binary=args1[2])
+        b = DataItem(meta=args2[0], data=args2[1], binary=args2[2])
+
+        DataItem.comparator = ComparatorType.STRICT
+        assert(a == a)
+        assert(b == b)
+        assert(a != b)
+
+        DataItem.comparator = ComparatorType.METADATA
+        assert(a == a)
+        assert(b == b)
+        assert(a != b if a.meta != b.meta else a == b)
+
+        DataItem.comparator = ComparatorType.DATA
+        assert(a == a)
+        assert(b == b)
+        assert(a != b if a.data != b.data else a == b)
+
+        DataItem.comparator = ComparatorType.BINARY
+        assert(a == a)
+        assert(b == b)
+        assert(a != b if a.binary != b.binary else a == b)
+
+    for p in perms:
+        comparisons(*p)
 
 
 if __name__ == "__main__":

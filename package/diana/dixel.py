@@ -24,8 +24,8 @@ class InvalidDicomException(pydicom.errors.InvalidDicomError, EndpointTypeExcept
     fp: PathLike = None
 
 
-@attr.s(auto_attribs=True, hash=False)
-class Dixel(DataItem, Hashable):
+@attr.s(auto_attribs=True, hash=False, cmp=False)
+class Dixel(DataItem):
     data: np.array = None
     dlvl: DLv = None
     tags: typ.Dict = attr.ib(factory=dict)
@@ -101,16 +101,6 @@ class Dixel(DataItem, Hashable):
         _dlvl = dlvl or self.dlvl
         _bytes = self.get_uid_str(_dlvl).encode("utf8")
         return hashlib.sha224( _bytes ).hexdigest()
-
-    def mk_dhash(self):
-        if self.data is None:
-            return None
-        return hashlib.sha3_224(self.data).hexdigest()
-
-    def mk_bhash(self):
-        if self.binary is None:
-            return None
-        return hashlib.sha3_224(self.binary).hexdigest()
 
     def mk_timestamp(self) -> datetime:
         try:
