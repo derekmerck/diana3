@@ -124,7 +124,6 @@ class Dixel(DataItem, Hashable):
                   cache_binary: bool = False,
                   bhash_validator: typ.Callable = None,
                   ignore_errors: bool = False) -> typ.Union["Dixel", None]:
-
         if not os.path.isfile(fp):
             if not ignore_errors:
                 print(fp)
@@ -159,16 +158,13 @@ class Dixel(DataItem, Hashable):
         return d
 
     def write_file(self, fp: PathLike = None):
-        if not fp:
-            fp = self.fp()
-
         if self.dlvl > DLv.INSTANCE:
             raise ValueError("Can only write files")
         if not self.binary:
             raise ValueError("No file to write")
         pass
-
-        with open(fp, "wb") as f:
+        _fp = fp or self.fp()
+        with open(_fp, "wb") as f:
             f.write(self.binary)
 
     @classmethod

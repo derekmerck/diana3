@@ -93,7 +93,7 @@ def orthanc_hash(PatientID: str,
 def dixel_oid(dixel, dlvl: DLv = None):
     _dlvl = dlvl or dixel.dlvl
     if not dixel.tags.get("PatientID"):
-        raise KeyError("No patient ID, cannot estimate an oid")
+        raise KeyError("No patient ID, cannot predict the oid")
     if dlvl == DLv.INSTANCE:
         s = "|".join([dixel.tags["PatientID"], dixel.stuid, dixel.serid, dixel.inuid])
     elif dlvl == DLv.SERIES:

@@ -1,5 +1,5 @@
 """
-python -m diana.cli.cli blah
+Simple test command
 """
 
 import click
