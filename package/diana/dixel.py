@@ -24,7 +24,7 @@ class InvalidDicomException(pydicom.errors.InvalidDicomError, EndpointTypeExcept
     fp: PathLike = None
 
 
-@attr.s(auto_attribs=True, hash=False, cmp=False)
+@attr.s(auto_attribs=True, eq=False, hash=False)
 class Dixel(DataItem):
     data: np.array = None
     dlvl: DLv = None
@@ -182,3 +182,5 @@ class Dixel(DataItem):
         parent = Dixel.from_tags(parent_tags, _dlvl)
         parent.add_child(child)
         return parent
+
+    __hash__ = Hashable.__hash__  # Attrs thinks fancy eq means unhashable

@@ -6,7 +6,7 @@ their series and study parents.
 from pprint import pprint
 import logging
 import os
-from diana.dicom import DLv, dicom_best_dt
+from diana.dicom import DLv
 from diana.dixel import Dixel
 from diana.services import DicomDirectory
 
@@ -24,7 +24,7 @@ instances = dict()
 
 for fn in file_names:
     try:
-        # May raise "InvalidDicomError" or return None
+        # May raise "InvalidDicomError" (or return None if ignore_errors flag is set)
         inst = D.get(fn)
     except:
         continue
@@ -45,14 +45,20 @@ for fn in file_names:
     else:
         studies[stu.mhash[0:6]].add_child(stu)
 
-ser_out = { k: {**v.main_tags(), "time": v.timestamp, "dhash": v.dhash[0:6]} for k, v in series.items() }
-stu_out = { k: {**v.main_tags(), "time": v.timestamp, "dhash": v.dhash[0:6]} for k, v in studies.items() }
+ser_out = { k: {**v.main_tags(),
+                "time": v.timestamp,
+                "dhash": v.dhash[0:6]}
+            for k, v in series.items() }
 
-print()
-print("SERIES")
+stu_out = { k: {**v.main_tags(),
+                "time": v.timestamp,
+                "dhash": v.dhash[0:6]}
+            for k, v in studies.items() }
+
+print("\nSERIES")
 print("-----------------")
 pprint(ser_out)
 
-print("STUDIES")
+print("\nSTUDIES")
 print("-----------------")
 pprint(stu_out)
