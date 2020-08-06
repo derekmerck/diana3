@@ -1,10 +1,13 @@
 import logging
 import tempfile
-from diana.dixel import Dixel
+import pathlib
 from diana.services import DicomDirectory
+from diana.exceptions import InvalidDicomException
+
+import pytest
 
 # TODO: Set this to something for a test-time dl
-fp = "/Users/derek/data/bdr_ibis1"
+fp = "/Users/derek/data/bdr_ibis/bdr_ibis1"
 
 
 def test_get():
@@ -20,16 +23,21 @@ def test_inventory():
     assert len(inv) > 100
 
 
-def test_status():
+def test_status_and_exceptions():
     with tempfile.TemporaryDirectory() as tmp:
         D = DicomDirectory(root=tmp)
         assert( D.status() )
+        (pathlib.Path(tmp) / "test").touch()
+        with pytest.raises(InvalidDicomException):
+            D.get("test")
+        with pytest.raises(FileNotFoundError):
+            D.get("testtesttest")
 
+    assert D.get("test", ignore_errors=True) is None
+    assert D.get("testtesttest", ignore_errors=True) is None
     assert not D.status()
-
-
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    test_status()
+    test_status_and_exceptions()

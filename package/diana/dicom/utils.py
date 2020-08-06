@@ -26,8 +26,10 @@ class DicomLevel(IntEnum):
 
 DLv = DicomLevel
 
-
 # Requires a simplified tag dictionary, not a pydicom Dataset
+# TODO: May need to reverse s (date T time) and put in special parses
+# Here is a strange time format:
+# 142854 20200229  h:m:s y:m:d  ??
 def dicom_best_dt(tags: typing.Dict, level=DLv.INSTANCE,
             strict=False,     # Raise if unable to parse dt for requested level
             allow_no_dt=False # Raise if also unable to parse dt at _any_ level

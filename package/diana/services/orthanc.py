@@ -1,6 +1,7 @@
 import typing as typ
 import requests
 import attr
+from hashlib import sha1
 from diana.endpoint import Endpoint, RestAgent, Serializable, UID
 from diana.dicom import DLv
 from diana.dixel import Dixel
@@ -76,5 +77,36 @@ class Orthanc(Endpoint, RestAgent, Serializable):
         for oid in studies:
             self.delete(oid)
 
+
+def orthanc_hash(PatientID: str,
+                 StudyInstanceUID: str,
+                 SeriesInstanceUID=None,
+                 SOPInstanceUID=None) -> sha1:
+    if not SeriesInstanceUID:
+        s = "|".join([PatientID, StudyInstanceUID])
+    elif not SOPInstanceUID:
+        s = "|".join([PatientID, StudyInstanceUID, SeriesInstanceUID])
+    else:
+        s = "|".join([PatientID, StudyInstanceUID, SeriesInstanceUID, SOPInstanceUID])
+
+
+def dixel_oid(dixel, dlvl: DLv = None):
+    _dlvl = dlvl or dixel.dlvl
+    if not dixel.tags.get("PatientID"):
+        raise KeyError("No patient ID, cannot estimate an oid")
+    if dlvl == DLv.INSTANCE:
+        s = "|".join([dixel.tags["PatientID"], dixel.stuid, dixel.serid, dixel.inuid])
+    elif dlvl == DLv.SERIES:
+        s = "|".join([dixel.tags["PatientID"], dixel.stuid, dixel.serid])
+    elif dlvl == DLv.STUDY:
+        s = "|".join([dixel.tags["PatientID"], dixel.stuid])
+    elif dlvl == DLv.PATIENT:
+        s = dixel.tags["PatientID"]
+    else:
+        raise TypeError("Unknown dixel level for oid")
+    return sha1(s.encode("UTF8"))
+
+
+Dixel.oid = dixel_oid
 
 Serializable.Factory.register(Orthanc)

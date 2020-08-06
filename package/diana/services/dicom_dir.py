@@ -17,9 +17,9 @@ class DicomDirectory(Endpoint, Serializable):
     def status(self):
         return os.path.isdir(self.root)
 
-    def get(self, fp: PathLike, binary: bool = False, **kwargs) -> Dixel:
+    def get(self, fp: PathLike, binary: bool = False, ignore_errors=False) -> Dixel:
         _fp = self.root / fp
-        d = Dixel.from_file(_fp, cache_binary=binary)
+        d = Dixel.from_file(_fp, cache_binary=binary, ignore_errors=ignore_errors)
         return d
 
     def put(self, dixel: Dixel, fp: PathLike = None, **kwargs):

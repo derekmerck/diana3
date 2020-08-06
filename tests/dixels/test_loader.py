@@ -3,7 +3,7 @@ import logging
 from diana.dixel import Dixel
 
 # TODO: Set this to something for a test-time dl
-fp = "/Users/derek/data/bdr_ibis1"
+fp = "/Users/derek/data/bdr_ibis/bdr_ibis1"
 
 
 def test_from_file():

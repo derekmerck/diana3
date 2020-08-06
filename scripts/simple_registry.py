@@ -1,19 +1,21 @@
+"""
+Recursively read in a directory and register the instances with
+their series and study parents.
+"""
+
 from pprint import pprint
 import logging
-from datetime import datetime
 import os
-import pathlib
 from diana.dicom import DLv, dicom_best_dt
 from diana.dixel import Dixel
 from diana.services import DicomDirectory
 
-#  What a terrible date format!
-# 142854 20200229  h:m:s y:m:d  ??
-
+# Suppress warnings about ugly data
 logger = logging.getLogger("ExceptionHandlingIterator")
 logger.setLevel(logging.ERROR)
 
-D = DicomDirectory("/data/incoming")
+D = DicomDirectory("/Users/derek/data/bdr_ibis")
+# D = DicomDirectory("/data/incoming")
 file_names = D.inventory()
 
 studies   = dict()
@@ -22,47 +24,35 @@ instances = dict()
 
 for fn in file_names:
     try:
+        # May raise "InvalidDicomError" or return None
         inst = D.get(fn)
     except:
         continue
     # print(inst.main_tags())
-    instances[inst.mhash[0:6]] = inst.main_tags()
+    instances[inst.mhash[0:6]] = inst
 
-    ser = Dixel.from_tags(inst.main_tags(dlvl=DLv.SERIES), dlvl=DLv.SERIES)
+    ser = Dixel.from_child(inst, dlvl=DLv.SERIES)
     if not series.get(ser.mhash[0:6]):
-        try:
-            best_dt = dicom_best_dt(ser.main_tags(dlvl=DLv.STUDY))
-        except:
-            best_dt = datetime.now()
-        series[ser.mhash[0:6]] = {
-            **ser.main_tags(),
-            "n_insts": 1,
-            "SeriesDateTime": best_dt.strftime("%d/%m/%y %H:%M:%S"),
-            "path": str(pathlib.Path(fn).parent)
-        }
+        series[ser.mhash[0:6]] = ser
+        ser.meta["fp"] = os.path.dirname(fn)
     else:
-        series[ser.mhash[0:6]]["n_insts"] += 1
+        series[ser.mhash[0:6]].add_child( inst )
 
-    stu = Dixel.from_tags(inst.main_tags(dlvl=DLv.STUDY), dlvl=DLv.STUDY)
+    stu = Dixel.from_child(inst, dlvl=DLv.STUDY)
     if not studies.get(stu.mhash[0:6]):
-        try:
-            best_dt = dicom_best_dt(stu.main_tags(dlvl=DLv.STUDY))
-        except:
-            best_dt = datetime.now()
-        studies[stu.mhash[0:6]] = {
-            **stu.main_tags(),
-            "n_insts": 1,
-            "StudyDateTime": best_dt.strftime("%B %d %Y, %H:%M"),
-            "path": str(pathlib.Path(fn).parent)
-        }
+        studies[stu.mhash[0:6]] = stu
+        stu.meta["fp"] = os.path.dirname(fn)
     else:
-        studies[stu.mhash[0:6]]["n_insts"] += 1
+        studies[stu.mhash[0:6]].add_child(stu)
+
+ser_out = { k: {**v.main_tags(), "time": v.timestamp, "dhash": v.dhash[0:6]} for k, v in series.items() }
+stu_out = { k: {**v.main_tags(), "time": v.timestamp, "dhash": v.dhash[0:6]} for k, v in studies.items() }
 
 print()
 print("SERIES")
 print("-----------------")
-pprint(series)
+pprint(ser_out)
 
 print("STUDIES")
 print("-----------------")
-pprint(studies)
+pprint(stu_out)
