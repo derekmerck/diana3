@@ -74,7 +74,7 @@ class Dixel(DataItem):
             raise ValueError
 
     @property
-    def seruid(self) -> str:
+    def sruid(self) -> str:
         if self.dlvl <= DLv.SERIES:
             return self.tags.get("SeriesInstanceUID")
         else:
@@ -92,7 +92,7 @@ class Dixel(DataItem):
         _dlvl = dlvl or self.dlvl
         uid_parts = [self.stuid]
         if _dlvl <= DLv.SERIES:
-            uid_parts.append(self.seruid)
+            uid_parts.append(self.sruid)
         if _dlvl == DLv.INSTANCE:
             uid_parts.append(self.inuid)
         return UID_JOIN_CHAR.join(uid_parts)

@@ -3,10 +3,9 @@ import tempfile
 import pathlib
 from diana.services import DicomDirectory
 from diana.exceptions import InvalidDicomException
-
 import pytest
 
-# TODO: Set this to something for a test-time dl
+# TODO: DICOM DIR -- download test set on demand
 fp = "/Users/derek/data/bdr_ibis/bdr_ibis1"
 
 

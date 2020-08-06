@@ -1,6 +1,6 @@
 """
 Create a test redis instance:
-$ docker run --rm --name my_redis -p 6379:6379 -d redis
+$ docker run --rm -d -p 6379:6379 redis
 """
 from diana.endpoint import PersistenceBackend
 from diana.endpoint.persistence.redis_persistence import RedisPersistenceBackend
