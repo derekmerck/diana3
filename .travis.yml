@@ -1,0 +1,37 @@
+dist: bionic
+language: python
+group: edge
+
+python:
+  - "3.8"
+
+services:
+  - docker
+  - redis
+
+addons:
+  apt:
+    packages:
+      - python3-setuptools
+      - python3-pip
+      - python3-openssl
+      - python3-wheel
+      - python3-numpy
+
+before_install:
+  - pip3 install --upgrade pip
+
+install:
+  - pip3 install .
+
+script:
+  - pytest
+
+after_success:
+  - DIANA_VERSION=$(python3 -c "import diana; print(diana.__version__)")
+  # Login to docker for push
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  # Update diana image
+  - cd docker
+  - docker build . -t "${DOCKER_USERNAME}/diana3" --label version=${DIANA_VERSION}
+  - docker push
