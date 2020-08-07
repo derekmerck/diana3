@@ -9,6 +9,7 @@ import pytest
 fp = "/Users/derek/data/bdr_ibis/bdr_ibis1"
 
 
+@pytest.mark.skip(reason="no way of currently testing this remotely")
 def test_get():
     D = DicomDirectory(root=fp)
     fn = "01001_2.16.840.1.113669.632.21.1139687029.3025563835.31534914061935431.dcm"
@@ -16,6 +17,7 @@ def test_get():
     assert d.tags["PatientID"] == "123456789"
 
 
+@pytest.mark.skip(reason="no way of currently testing this remotely")
 def test_inventory():
     D = DicomDirectory(root=fp)
     inv = D.inventory()
