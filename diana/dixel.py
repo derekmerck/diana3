@@ -10,6 +10,7 @@ import hashlib
 import attr
 import numpy as np
 import pydicom
+import diana.dicom.pydicom_ds_ext  # Monkey patch
 from diana.dicom import DLv, dicom_best_dt
 from libsvc.endpoint import DataItem
 from libsvc.endpoint.hashable import Hashable
