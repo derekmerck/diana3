@@ -39,4 +39,4 @@ after_success:
   # Update diana image
   - cd docker
   - docker build . -t "${DOCKER_USERNAME}/diana3" --label version=${DIANA_VERSION}
-  - docker push
+  - docker push "${DOCKER_USERNAME}/diana3"
