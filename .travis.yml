@@ -25,16 +25,21 @@ install:
   - pip3 install .
 
 before_script:
+  - echo $(pwd)
+
   - export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/libsvc
   # Create an orthanc service (want to do this with a fixture later, I suspect)
   - docker run --rm -d -p 8042:8042 derekmerck/orthanc-cwbv
 
-  - mkdir -p ~/data/dcm && cd ~/data/dcm
+  - mkdir -p ~/data/dcm && pushd ~/data/dcm
   - curl https://repository.library.brown.edu/viewers/archive/bdr:697313/download -L -o ibis1.zip
   - curl https://repository.library.brown.edu/viewers/archive/bdr:697314/download -L -o ibis2.zip
   - unzip -j ibis1.zip -d ibis1 && rm ibis1.zip
   - unzip -j ibis2.zip -d ibis2 && rm ibis2.zip
-  - cd $(pwd)
+  - popd
+  - echo $(cwd)
+
+  - cd $TRAVIS_BUILD_DIRECTORY
 
 script:
   - pytest
