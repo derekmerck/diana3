@@ -1,23 +1,28 @@
 import logging
+import os
 import tempfile
 import pathlib
 from diana.services import DicomDirectory
 from diana.exceptions import InvalidDicomException
 import pytest
 
-# TODO: DICOM DIR -- download test set on demand
-fp = "/Users/derek/data/bdr_ibis/bdr_ibis1"
+fp = "~/data/dcm"
+fp = os.path.expanduser(fp)
 
 
-@pytest.mark.skip(reason="no way of currently testing this remotely")
 def test_get():
     D = DicomDirectory(root=fp)
-    fn = "01001_2.16.840.1.113669.632.21.1139687029.3025563835.31534914061935431.dcm"
+    fn = "ibis1/01001_2.16.840.1.113669.632.21.1139687029.3025563835.31534914061935431.dcm"
     d = D.get(fn)
     assert d.tags["PatientID"] == "123456789"
 
+    fn = "ibis2/IM100"
+    d = D.get(fn)
+    assert d.tags["PatientID"] == "15.03.26-07:44:14-STD-1.3.12.2.1107.5.1.4.66502"
 
-@pytest.mark.skip(reason="no way of currently testing this remotely")
+
+
+# Has to recurse for this to work at all
 def test_inventory():
     D = DicomDirectory(root=fp)
     inv = D.inventory()
