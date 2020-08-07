@@ -1,5 +1,6 @@
 import attr
-from service.daemon import ObservableDirectory, Serializable
+from libsvc.endpoint import Serializable
+from libsvc.daemon import ObservableDirectory
 from diana.services import DicomDirectory
 
 

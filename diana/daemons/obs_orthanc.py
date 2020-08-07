@@ -1,7 +1,7 @@
 
 import typing as typ
 from enum import Enum
-from service.daemon import ObservableMixin, Event, Serializable
+from libsvc.daemon import ObservableMixin, Event, Serializable
 from diana.services import Orthanc
 
 

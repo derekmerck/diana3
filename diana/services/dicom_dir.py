@@ -2,8 +2,7 @@ import typing as typ
 import os
 import pathlib
 import attr
-from service.endpoint import Endpoint, Serializable
-from diana.dicom import DLv
+from diana.libsvc import Endpoint, Serializable
 from diana.dixel import Dixel
 
 PathLike = typ.Union[str, pathlib.Path]

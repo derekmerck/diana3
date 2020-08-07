@@ -1,0 +1,22 @@
+
++- README.md
++- setup.py  -> only have to recurse diana
+|
++- [docs]
+|   +- sphinx
+|   +- [html]
+|
++- reqs.txt
+|
++- [diana]
+    +- [services]
+    +- [etc...]
+    |
+    +- [svclib]
+        +- reqs.txt
+        +- [endpoint]
+        +- [etc...]
+        +- tests
+
++- tests
+

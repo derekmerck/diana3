@@ -1,10 +1,10 @@
 """
-python -m diana.cli.cli blah
+python -m diana.cli.cli echo hello
 """
 import click
 from diana import __version__
 from .click_ptypes import ClickServiceManager
-from service.endpoint import ServiceManager
+from libsvc.endpoint import ServiceManager
 from .echo import echo
 from .do import do
 from .status import status

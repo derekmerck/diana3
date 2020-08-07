@@ -1,5 +1,5 @@
 __name__ = "diana"
-__version__ = "3.2.1"
+__version__ = "3.2.2"
 __author__ = "Derek Merck"
 __author_email__ = "derek.merck@ufl.edu"
 __desc__ = "DICOM Analytics and Archive - DIANA."

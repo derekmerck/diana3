@@ -10,12 +10,11 @@ import hashlib
 import attr
 import numpy as np
 import pydicom
-from diana.dicom import pydicom_ds_ext  # Monkey patch pydicom
 from diana.dicom import DLv, dicom_best_dt
-from service.endpoint import DataItem, UID
-from service.endpoint.hashable import Hashable
-from service.utils import hex_xor as xor
-from service.exceptions import EndpointValueException
+from libsvc.endpoint import DataItem
+from libsvc.endpoint.hashable import Hashable
+from libsvc.utils import hex_xor as xor
+from libsvc.exceptions import EndpointValueException
 
 PathLike = typ.Union[str, pathlib.Path]
 UID_JOIN_CHAR = "|"

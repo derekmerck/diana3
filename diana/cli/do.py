@@ -1,7 +1,7 @@
 from pprint import pformat
 import click
 from .click_ptypes import ClickYAML, ClickService
-from service.endpoint import Endpoint
+from libsvc.endpoint import Endpoint
 
 
 @click.command(name="do")

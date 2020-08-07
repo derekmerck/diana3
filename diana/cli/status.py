@@ -1,5 +1,5 @@
 import click
-from service.endpoint import ServiceManager
+from libsvc.endpoint import ServiceManager
 
 
 @click.command(name="status")

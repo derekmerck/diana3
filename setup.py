@@ -5,7 +5,7 @@ with open("README.md") as f:
     long_description = f.read()
 
 reqs = set()
-for fn in ["requirements.txt", "service/requirements.txt"]:
+for fn in ["requirements.txt", "libsvc/requirements.txt"]:
     with open(fn) as f:
         s = set( f.read().splitlines() )
         reqs = reqs.union(s)
@@ -17,6 +17,8 @@ with open("diana/__init__.py") as f:
     print(match)
     metadata = dict(match)
 
+packages = [*setuptools.find_packages(), *setuptools.find_packages(where="libsvc")]
+
 setuptools.setup(
     name=metadata.get("name"),
     version=metadata.get("version"),
@@ -26,7 +28,11 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url=metadata.get("url"),
-    packages=['diana', 'service'],
+    packages=packages,
+    package_dir={
+        # 'diana': 'diana',
+        'libsvc': 'libsvc/libsvc'
+    },
     include_package_data=True,
     classifiers=[
         'Development Status :: 3 - Alpha',
