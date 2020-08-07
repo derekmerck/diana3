@@ -26,6 +26,8 @@ install:
 
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/libsvc
+  # Create an orthanc service (want to do this with a fixture later, I suspect)
+  - docker run --rm -d -p 8042:8042 derekmerck/orthanc-cwbv
 
 script:
   - pytest

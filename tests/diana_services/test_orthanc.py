@@ -1,6 +1,6 @@
 """"
 Create a test orthanc instance:
-$ docker run --rm -d -p 8042:8042 derekmerck/orthanc
+$ docker run --rm -d -p 8042:8042 derekmerck/orthanc-wbvc
 """
 import logging
 from diana.services import Orthanc
