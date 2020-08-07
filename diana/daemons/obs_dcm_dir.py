@@ -1,5 +1,5 @@
 import attr
-from diana.endpoint import ObservableDirectory, Serializable
+from service.daemon import ObservableDirectory, Serializable
 from diana.services import DicomDirectory
 
 

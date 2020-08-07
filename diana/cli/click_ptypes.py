@@ -5,7 +5,8 @@ Click parameter types with converters for cli
 import typing as typ
 import yaml
 import click
-from diana.endpoint import ServiceManager, smart_yaml_loader, Endpoint
+from service.endpoint import ServiceManager, Endpoint
+from service.utils import smart_yaml_loader
 import diana.services  # Register service types
 
 

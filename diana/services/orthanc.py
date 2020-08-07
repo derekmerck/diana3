@@ -2,7 +2,7 @@ import typing as typ
 import requests
 import attr
 from hashlib import sha1
-from diana.endpoint import Endpoint, RestAgent, RTy, Serializable, UID
+from service.endpoint import Endpoint, RestAgent, RTy, Serializable, UID
 from diana.dicom import DLv
 from diana.dixel import Dixel
 

@@ -1,6 +1,6 @@
 import typing as typ
 import attr
-from diana.endpoint import UID, Serializable
+from service.endpoint import UID, Serializable
 from diana.dicom import DLv
 from .orthanc import Orthanc
 

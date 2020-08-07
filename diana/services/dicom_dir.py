@@ -2,7 +2,7 @@ import typing as typ
 import os
 import pathlib
 import attr
-from diana.endpoint import Endpoint, Serializable
+from service.endpoint import Endpoint, Serializable
 from diana.dicom import DLv
 from diana.dixel import Dixel
 

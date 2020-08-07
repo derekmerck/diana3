@@ -1,3 +1,6 @@
 [submodule "package/diana/endpoint"]
 	path = package/diana/endpoint
 	url = https://github.com/derekmerck/endpoint
+[submodule "service"]
+	path = service
+	url = https://github.com/derekmerck/endpoint

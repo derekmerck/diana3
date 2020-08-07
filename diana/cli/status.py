@@ -1,5 +1,5 @@
 import click
-from diana.endpoint import ServiceManager
+from service.endpoint import ServiceManager
 
 
 @click.command(name="status")

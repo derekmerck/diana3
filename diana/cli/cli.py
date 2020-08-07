@@ -4,7 +4,7 @@ python -m diana.cli.cli blah
 import click
 from diana import __version__
 from .click_ptypes import ClickServiceManager
-from diana.endpoint import ServiceManager
+from service.endpoint import ServiceManager
 from .echo import echo
 from .do import do
 from .status import status

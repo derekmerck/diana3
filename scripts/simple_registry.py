@@ -7,8 +7,8 @@ from pprint import pprint
 import logging
 import os
 from diana.dicom import DLv
-from diana.dixel import Dixel
-from diana.services import DicomDirectory
+from diana import Dixel
+from diana import DicomDirectory
 
 # Suppress warnings about ugly data
 logger = logging.getLogger("ExceptionHandlingIterator")

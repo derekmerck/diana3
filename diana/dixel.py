@@ -12,15 +12,17 @@ import numpy as np
 import pydicom
 from diana.dicom import pydicom_ds_ext  # Monkey patch pydicom
 from diana.dicom import DLv, dicom_best_dt
-from diana.endpoint import DataItem, UID, Hashable, hex_xor as xor
-from diana.endpoint import EndpointTypeException
+from service.endpoint import DataItem, UID
+from service.endpoint.hashable import Hashable
+from service.utils import hex_xor as xor
+from service.exceptions import EndpointValueException
 
 PathLike = typ.Union[str, pathlib.Path]
 UID_JOIN_CHAR = "|"
 
 
 @attr.s(auto_attribs=True)
-class InvalidDicomException(pydicom.errors.InvalidDicomError, EndpointTypeException):
+class InvalidDicomException(pydicom.errors.InvalidDicomError, EndpointValueException):
     fp: PathLike = None
 
 

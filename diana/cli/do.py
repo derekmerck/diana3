@@ -1,7 +1,7 @@
 from pprint import pformat
 import click
 from .click_ptypes import ClickYAML, ClickService
-from diana.endpoint import ServiceManager
+from service.endpoint import Endpoint
 
 
 @click.command(name="do")
@@ -12,7 +12,7 @@ from diana.endpoint import ServiceManager
 @click.option("-k", "--kwargs", type=ClickYAML(), default={},
               help="String or file in yaml format resulting in a dict of {KWARGS}")
 @click.pass_context
-def do(ctx, service, method, args, kwargs):
+def do(ctx, service: Endpoint, method, args, kwargs):
     """
     Invoke an arbitrary function METHOD on SERVICE_NAME with optional parameters
     given in [ARGS] and {KWARGS}
