@@ -7,14 +7,16 @@ from pprint import pprint
 import logging
 import os
 from diana.dicom import DLv
-from diana import Dixel
-from diana import DicomDirectory
+from diana.dixel import Dixel
+from diana.services import DicomDirectory
 
 # Suppress warnings about ugly data
 logger = logging.getLogger("ExceptionHandlingIterator")
 logger.setLevel(logging.ERROR)
 
-D = DicomDirectory("/Users/derek/data/bdr_ibis")
+rootp = "~/data/dcm"
+
+D = DicomDirectory(root=rootp)
 # D = DicomDirectory("/data/incoming")
 file_names = D.inventory()
 
@@ -47,12 +49,14 @@ for fn in file_names:
 
 ser_out = { k: {**v.main_tags(),
                 "time": v.timestamp,
-                "dhash": v.dhash[0:6]}
+                "dhash": v.dhash[0:6],
+                "n_children": len( v.children ) }
             for k, v in series.items() }
 
 stu_out = { k: {**v.main_tags(),
                 "time": v.timestamp,
-                "dhash": v.dhash[0:6]}
+                "dhash": v.dhash[0:6],
+                "n_children": len( v.children ) }
             for k, v in studies.items() }
 
 print("\nSERIES")

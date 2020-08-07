@@ -6,12 +6,11 @@ from diana.services import DicomDirectory
 from diana.exceptions import InvalidDicomException
 import pytest
 
-fp = "~/data/dcm"
-fp = os.path.expanduser(fp)
+rootp = "~/data/dcm"
 
 
 def test_get():
-    D = DicomDirectory(root=fp)
+    D = DicomDirectory(root=rootp)
     fn = "ibis1/01001_2.16.840.1.113669.632.21.1139687029.3025563835.31534914061935431.dcm"
     d = D.get(fn)
     assert d.tags["PatientID"] == "123456789"
@@ -24,9 +23,10 @@ def test_get():
 
 # Has to recurse for this to work at all
 def test_inventory():
-    D = DicomDirectory(root=fp)
+    D = DicomDirectory(root=rootp)
     inv = D.inventory()
-    assert len(inv) > 100
+    # Each has about 350+ studies
+    assert len(inv) > 700
 
 
 def test_status_and_exceptions():

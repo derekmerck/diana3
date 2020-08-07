@@ -1,10 +1,10 @@
 import os
 import logging
 from diana.dixel import Dixel
-import pytest
 
 
 fp = "~/data/dcm"
+# Dixel doesn't auto-majickally expand paths
 fp = os.path.expanduser(fp)
 
 

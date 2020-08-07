@@ -8,10 +8,16 @@ from diana.dixel import Dixel
 PathLike = typ.Union[str, pathlib.Path]
 
 
+def mk_path(path: PathLike) -> pathlib.Path:
+    path = pathlib.Path(path)
+    path = path.expanduser()
+    return path
+
+
 @attr.s(auto_attribs=True, hash=False)
 class DicomDirectory(Endpoint, Serializable):
 
-    root: PathLike = attr.ib(default=None, converter=pathlib.Path)
+    root: PathLike = attr.ib(default=None, converter=mk_path)
 
     def status(self):
         return os.path.isdir(self.root)
