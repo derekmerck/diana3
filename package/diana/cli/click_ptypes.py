@@ -48,7 +48,7 @@ class ClickYAML(click.ParamType):
     name = "yaml"
 
     def convert(self, value, param, ctx) -> typ.Any:
-        # May be [] or {}, return as is
+        # May be [] or {} depending on default type, return as is
         if not value:
             return value
         try:

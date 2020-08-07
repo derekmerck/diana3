@@ -13,8 +13,13 @@ from diana.endpoint import ServiceManager
               help="String or file in yaml format resulting in a dict of {KWARGS}")
 @click.pass_context
 def do(ctx, service, method, args, kwargs):
-    """Invoke an arbitrary function METHOD on SERVICE_NAME with optional
-    parameters given in [ARGS] and {KWARGS}"""
+    """
+    Invoke an arbitrary function METHOD on SERVICE_NAME with optional parameters
+    given in [ARGS] and {KWARGS}
+
+    \b
+    $ diana-cli do orthanc: get -a '[abcd-oido-idoi-de12]'
+    """
 
     if not hasattr(service, method):
         raise RuntimeError(f"Unknown method {method} on service {service}")

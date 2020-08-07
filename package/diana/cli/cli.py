@@ -7,6 +7,7 @@ from .click_ptypes import ClickServiceManager
 from diana.endpoint import ServiceManager
 from .echo import echo
 from .do import do
+from .status import status
 
 
 @click.group()
@@ -28,7 +29,7 @@ def add_commands(group, commands):
         group.add_command(c)
 
 
-add_commands(cli, [echo, do])
+add_commands(cli, [echo, do, status])
 
 
 def main():
