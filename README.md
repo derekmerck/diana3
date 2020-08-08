@@ -6,6 +6,8 @@ Derek Merck
 University of Florida and Shands Hospital  
 Gainesville, FL  
 
+[![Build Status](https://travis-ci.org/derekmerck/diana3.svg?branch=master)](https://travis-ci.org/derekmerck/diana3)
+
 Source: <https://www.github.com/derekmerck/diana3>  
 Image:  <https://cloud.docker.com/repository/docker/derekmerck/diana3>
 
@@ -23,7 +25,7 @@ Hospital picture archive and communications systems (PACS) are not well suited f
 Python-Diana
 ----------------
 
-The Python-Diana package for Python >= 3.6 provides an api for a network of DICOM-file related services including PACS query, local archive, anonymization, file access, and study indexing.
+The Python-Diana package for Python >= 3.8 provides an api for a network of DICOM-file related services including PACS query, local archive, anonymization, file access, and study indexing.
 
 
 ### Installation
