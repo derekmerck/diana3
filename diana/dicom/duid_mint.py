@@ -44,13 +44,13 @@ class DcmUIDMint(object):
     namespace: str = "dicom"
 
     @classmethod
-    def hashes_from_uid(cls, instance_uid: str) -> typ.Dict[str, str]:
+    def hashes_from_duid(cls, duid: str) -> typ.Dict[str, str]:
         # Convenience function to extract the hex ihash suffix from an inst ihash uid
         # B/c the hashed uid is lossy, only the first 10-hex values of the meta and
         # data hash can be recovered.
-        if not instance_uid.startswith(DcmUIDMint.prefix):
+        if not duid.startswith(DcmUIDMint.prefix):
             raise ValueError(f"Bad prefix")
-        working_str = instance_uid[len(DcmUIDMint.prefix)+1:]
+        working_str = duid[len(DcmUIDMint.prefix)+1:]
 
         try:
             schema, namespace, *suffix = working_str.split('.')
@@ -60,19 +60,23 @@ class DcmUIDMint(object):
         if schema == hash_str("hash_uid", 2):
 
             res = {
+                "duid": duid,
                 "schema": "hash_uid",
                 "ns_hash": str(hex(int(namespace)))[2:],
                 "dlvl": DLv( int(suffix[0]) ),
                 "mhash_s": str(hex(int(suffix[1])))[2:],
                 "dhash_s": str(hex(int(suffix[2])))[2:]
             }
+            if namespace == hash_str( DcmUIDMint.namespace, 2):
+                res["namespace"] = DcmUIDMint.namespace
+
             return res
 
         raise ValueError(f"Schema {schema} is not 'hash_uid'")
 
     def content_hash_uid(self,
                  hex_mhash: str,
-                 hex_dhash: str,
+                 hex_dhash: str = "0",
                  dlvl: DLv = DLv.INSTANCE,
                  namespace: str = None):
         """
@@ -85,13 +89,14 @@ class DcmUIDMint(object):
 
         Where
           - prefix = 25 digits + stop                       26
-          - schema = stop + 2 digits                   +3 = 29
+          - schema = 2 digits + stop                   +3 = 29
           - namespace = 2 digits + stop                +3 = 32
           - level = 1 digit + stop                     +2 = 34
           - 12-bit mhash = 12 digits + stop           +13 = 47
           - 12-bit dhash = 12 digits                  +12 = 59
 
-        Total length is 59 chars
+        Total length is 59 or fewer chars depending on converted decimal
+        integer lengths.
 
         A single instance study will result in the same content hash for
         study, series, and instance.  A single series study will share the
@@ -100,18 +105,12 @@ class DcmUIDMint(object):
 
         Similarly, users can force a totally clean UID while maintaining the
         reference content hash suffix for a freshly copied/anonymized image by
-        manually setting the app_id to something unique like "anon".
-
-        Annotations are intended to include validation data, like an abbreviated
-        series and study content hash for reference, hence they are also passed using
-        hexidecimal representation.
+        manually setting the namespace to something unique like "anon".
         """
 
         _namespace = hash_str( namespace or self.namespace )
         schema = hash_str("hash_uid", 2)
         level = dlvl.value
-        dec_mhash = int(hex_mhash, 16) / 2**(4*12)
-        dec_dhash = int(hex_dhash, 16) / 2**(4*12)
 
         bitlen = len(hex_mhash) * 4
         # 42-bits available for 12 decimal digits (4*12)
