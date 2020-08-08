@@ -38,7 +38,6 @@ before_script:
   - popd
 
 script:
-  - exit 1
   - pytest
 
 after_success:
