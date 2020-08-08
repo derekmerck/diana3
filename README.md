@@ -36,8 +36,9 @@ Or install as locally editable:
 
 ```bash
 $ git clone --recurse-submodules git+https://github.com/derekmerck/diana3
-$ pip install -e diana3
+$ pip install -e diana3 diana3/libsvc
 ```
+**Oddly requries separate installation of the submodule b/c developer installs create a single path link to the root of the project.
 
 `diana-cli`
 -----------------
@@ -55,7 +56,7 @@ Docker-Image
 The docker directory includes a Dockerfile for a self-contained DIANA container based on Docker's current Python image.   Current builds of this images from ci are available on docker hub.
 
 ```bash
-$ docker run -it derekmerck/diana3 diana-cli --version
+$ docker run --rm derekmerck/diana3 diana-cli --version
 3.2.x
 ```
 
