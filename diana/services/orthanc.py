@@ -4,7 +4,7 @@ import attr
 from hashlib import sha1
 from libsvc.endpoint import Endpoint, RestAgent, RTy, Serializable, UID
 from diana.dicom import DLv
-from diana.dixel import Dixel
+from diana.dixel.dixel import Dixel
 
 
 def dlvl_to_orthanc_resource(dlvl: DLv) -> str:

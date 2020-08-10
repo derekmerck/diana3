@@ -68,6 +68,22 @@ class Dixel(DataItem):
         res = {k: self.tags.get(k) for k in main_tag_keys if self.tags.get(k)}  # Skip None
         return res
 
+    def summary(self):
+        res = self.main_tags()
+        res = {k: v for k, v in res.items() if not (k.endswith("Time") or k.endswith("Date"))}
+        res.update({
+            "mhash": self.mhash,
+            "dhash": self.dhash,
+            "bhash": self.bhash,
+            "dlvl": str(self.dlvl),
+            "timestamp": str(self.timestamp)
+        })
+        if self.dlvl > DLv.INSTANCE:
+            res["n_children"] = len(self.children)
+        if self.meta.get("fp"):
+            res["fp"] = str( self.meta.get("fp") )
+        return res
+
     @property
     def inuid(self) -> str:
         if self.dlvl == DLv.INSTANCE:
@@ -147,6 +163,7 @@ class Dixel(DataItem):
                 binary=_bin if cache_binary else None,
                 # sources=[f"file:{fp}"]
             )
+        d.meta["fp"] = fp
         return d
 
     def write_file(self, fp: PathLike = None):

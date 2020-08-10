@@ -1,6 +1,6 @@
 import os
 import logging
-from diana.dixel import Dixel
+from diana.dixel.dixel import Dixel
 
 
 fp = "~/data/dcm"

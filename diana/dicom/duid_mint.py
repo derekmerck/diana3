@@ -74,6 +74,7 @@ class DcmUIDMint(object):
 
         raise ValueError(f"Schema {schema} is not 'hash_uid'")
 
+    # ihuid -- integer hash uid
     def content_hash_uid(self,
                  hex_mhash: str,
                  hex_dhash: str = "0",

@@ -1,17 +1,9 @@
-import typing as typ
 import os
-import pathlib
 import attr
 from libsvc.endpoint import Endpoint, Serializable
-from diana.dixel import Dixel
+from libsvc.utils import PathLike, mk_path
+from diana.dixel.dixel import Dixel
 
-PathLike = typ.Union[str, pathlib.Path]
-
-
-def mk_path(path: PathLike) -> pathlib.Path:
-    path = pathlib.Path(path)
-    path = path.expanduser()
-    return path
 
 
 @attr.s(auto_attribs=True, hash=False)
