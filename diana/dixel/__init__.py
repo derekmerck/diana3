@@ -1,2 +1,2 @@
-from .dixel import Dixel
-from .mock import MockDixel
+from .dixel import Dixel, InvalidDicomException
+from .mock import gen_study

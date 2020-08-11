@@ -2,7 +2,8 @@ import typing as typ
 import requests
 import attr
 from hashlib import sha1
-from libsvc.endpoint import Endpoint, RestAgent, RTy, Serializable, UID
+from libsvc.endpoint import Endpoint, Serializable, UID
+from libsvc.rest_agent import RestAgent, RTy
 from diana.dicom import DLv
 from diana.dixel.dixel import Dixel
 

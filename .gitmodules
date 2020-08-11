@@ -1,12 +1,3 @@
-[submodule "package/diana/endpoint"]
-	path = package/diana/endpoint
-	url = https://github.com/derekmerck/endpoint
-[submodule "service"]
-	path = service
-	url = https://github.com/derekmerck/endpoint
-[submodule "diana/libsvc"]
-	path = diana/libsvc
-	url = http://github.com/derekmerck/endpoint
 [submodule "libsvc"]
 	path = libsvc
 	url = https://github.com/derekmerck/endpoint
