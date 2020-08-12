@@ -61,6 +61,13 @@ class DicomRegistry(Endpoint):
                 continue
         self.freeze()
 
+    def get(self, uid: UID, dlvl: DLv = DLv.STUDY, **kwargs) -> Dixel:
+        if dlvl == DLv.STUDY:
+            return self.studies[uid[:NUM_KEY_CHARS]]
+        elif dlvl == DLv.SERIES:
+            return self.series[uid[:NUM_KEY_CHARS]]
+        return self.instances[uid[:NUM_KEY_CHARS]]
+
     def put(self, inst: Dixel, **kwargs):
 
         self.dhashes[self.t(inst, KTy.DHASH)] = inst.mhash

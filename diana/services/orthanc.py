@@ -76,6 +76,11 @@ class Orthanc(Endpoint, RestAgent, Serializable):
                 d.file = _file
         return d
 
+    def exists(self, oid: UID, dlvl: DLv = DLv.STUDY, **kwargs) -> bool:
+            resource = f"{dlvl.opath()}/{oid}"
+            r = self.request(resource, ignore_errors=True)  # Will return None if not found
+            return r is not None
+
     def find(self, query: typ.Dict, *args, **kwargs) -> typ.List[UID]:
         resource = "tools/find"
         return self.request(resource, RTy.POST, json=query)
