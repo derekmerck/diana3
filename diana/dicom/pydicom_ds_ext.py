@@ -67,8 +67,11 @@ def get_dict(ds: pydicom.Dataset) -> dict:
 
 def get_pixels(ds: pydicom.Dataset, units="uint8"):
 
-    if ds.pixel_array is None:
-        raise TypeError("No pixel data available")
+    try:
+        if ds.pixel_array is None:
+            raise AttributeError("No pixel data available")
+    except:
+        raise
 
     if ds.get('PhotometricInterpretation') == "RGB":
         pixels = ds.pixel_array.reshape([ds.get("Rows"),
@@ -107,4 +110,4 @@ def get_pixels(ds: pydicom.Dataset, units="uint8"):
 
 # Monkey Patch
 pydicom.Dataset.get_dict = get_dict
-pydicom.Dataset.get_pixels = get_pixels
+pydicom.Dataset.get_pixels = get_pixels  # TODO: This already exists in pydicom ... :(

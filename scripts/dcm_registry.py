@@ -54,7 +54,8 @@ class DicomRegistry(Endpoint):
 
         for fn in file_names:
             try:
-                # May raise "InvalidDicomError" (or return None if ignore_errors flag is set)
+                # May raise "InvalidDicomException" if not dicom
+                # (or return None if ignore_errors flag is set)
                 inst = D.get(fn)
                 self.put(inst)
             except InvalidDicomException:

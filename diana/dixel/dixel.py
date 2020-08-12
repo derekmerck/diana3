@@ -149,17 +149,21 @@ class Dixel(DataItem):
                     return
         try:
             ds = pydicom.dcmread(fp)  # This should raise InvalidDicom and exit early
-        except (pydicom.errors.InvalidDicomError, AttributeError):
+        except pydicom.errors.InvalidDicomError:
             if not ignore_errors:
                 # print(f"Failed to parse dicom from {fp}")
                 raise InvalidDicomException(fp)
             else:
                 return
         tags = ds.get_dict()
+        try:
+            pixels = ds.get_pixels()
+        except AttributeError:
+            pixels = None
         d = cls(dlvl=DLv.INSTANCE,
                 tags=tags,
                 bhash=bhash,
-                data=ds.get_pixels(),
+                data=pixels,
                 binary=_bin if cache_binary else None,
                 # sources=[f"file:{fp}"]
             )
