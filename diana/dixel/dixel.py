@@ -87,21 +87,21 @@ class Dixel(DataItem):
     @property
     def inuid(self) -> str:
         if self.dlvl == DLv.INSTANCE:
-            return self.tags.get("SOPInstanceUID")
+            return self.tags["SOPInstanceUID"]
         else:
             raise ValueError
 
     @property
     def sruid(self) -> str:
         if self.dlvl <= DLv.SERIES:
-            return self.tags.get("SeriesInstanceUID")
+            return self.tags["SeriesInstanceUID"]
         else:
             raise ValueError
 
     @property
     def stuid(self) -> str:
         if self.dlvl <= DLv.STUDY:
-            return self.tags.get("StudyInstanceUID")
+            return self.tags["StudyInstanceUID"]
         else:
             raise ValueError
 
