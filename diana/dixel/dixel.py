@@ -149,7 +149,7 @@ class Dixel(DataItem):
                     return
         try:
             ds = pydicom.dcmread(fp)  # This should raise InvalidDicom and exit early
-        except pydicom.errors.InvalidDicomError:
+        except (pydicom.errors.InvalidDicomError, AttributeError):
             if not ignore_errors:
                 # print(f"Failed to parse dicom from {fp}")
                 raise InvalidDicomException(fp)
