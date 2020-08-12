@@ -202,6 +202,12 @@ class Dixel(DataItem):
     def from_child(cls, child: "Dixel", dlvl: DLv = None) -> "Dixel":
         _dlvl = dlvl or child.dlvl + 1
         parent_tags = child.main_tags(_dlvl)
+
+        if not "StudyInstanceUID" in parent_tags or \
+            (_dlvl == DLv.SERIES and not "SeriesInstanceUID" in parent_tags):
+            print(parent_tags)
+            raise InvalidDicomException
+
         parent = Dixel.from_tags(parent_tags, _dlvl)
         if child.meta.get("fp"):
             parent.meta["fp"] = os.path.dirname( child.meta.get("fp") )
