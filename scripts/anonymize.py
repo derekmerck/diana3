@@ -70,6 +70,8 @@ if __name__ == "__main__":
     print("-----------------")
     pprint(R.find({"dlvl": DLv.STUDY}))
 
+    exit()
+
     O = Orthanc()
     O.clear()
 

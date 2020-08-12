@@ -199,6 +199,8 @@ class Dixel(DataItem):
         _dlvl = dlvl or child.dlvl + 1
         parent_tags = child.main_tags(_dlvl)
         parent = Dixel.from_tags(parent_tags, _dlvl)
+        if child.meta.get("fp"):
+            parent.meta["fp"] = os.path.dirname( child.meta.get("fp") )
         parent.add_child(child)
         return parent
 
