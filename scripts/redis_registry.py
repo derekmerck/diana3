@@ -143,7 +143,7 @@ class RedisDicomRegistry(DicomRegistry, RedisPersistenceBackend):
         else:
             n = self.gateway.hget(ser_mhash_key, "n_children").decode("utf8")
             nn = int(n) + 1
-            self.gateway.hset(ser_mhash_key, "n_children", nn).decode("utf8")
+            self.gateway.hset(ser_mhash_key, "n_children", nn)
             b = self.gateway.hget(ser_mhash_key, "bhash").decode("utf8")
             bb = xor(b, dixel.bhash)
             self.gateway.hset(ser_mhash_key, "dhash", bb)

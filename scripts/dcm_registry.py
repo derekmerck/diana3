@@ -79,13 +79,11 @@ class DicomRegistry(Endpoint):
         else:
             self.studies[self.t(stu)].add_child(stu)
 
-
     def freeze(self):
-        for collection in [self.series, self.studies]:
+        for collection in [self.series.values(), self.studies.values()]:
             for item in collection:
                 self.dhashes[self.t(item, KTy.DHASH)] = item.dhash
                 self.bhashes[self.t(item, KTy.BHASH)] = item.bhash
-
 
     def find(self, q: typ.Mapping, **kwargs):
         dlvl = q.get("dlvl")
