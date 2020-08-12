@@ -160,6 +160,13 @@ class Dixel(DataItem):
             pixels = ds.get_pixels()
         except AttributeError:
             pixels = None
+
+        if not "StudyInstanceUID" in tags or \
+            not "SeriesInstanceUID" in tags or \
+            not "SOPInstanceUID" in tags:
+            print(tags)
+            raise InvalidDicomException
+
         d = cls(dlvl=DLv.INSTANCE,
                 tags=tags,
                 bhash=bhash,
@@ -202,12 +209,6 @@ class Dixel(DataItem):
     def from_child(cls, child: "Dixel", dlvl: DLv = None) -> "Dixel":
         _dlvl = dlvl or child.dlvl + 1
         parent_tags = child.main_tags(_dlvl)
-
-        if not "StudyInstanceUID" in parent_tags or \
-            (_dlvl == DLv.SERIES and not "SeriesInstanceUID" in parent_tags):
-            print(parent_tags)
-            raise InvalidDicomException
-
         parent = Dixel.from_tags(parent_tags, _dlvl)
         if child.meta.get("fp"):
             parent.meta["fp"] = os.path.dirname( child.meta.get("fp") )
