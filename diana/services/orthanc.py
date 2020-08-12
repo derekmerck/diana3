@@ -1,4 +1,5 @@
 import typing as typ
+from pprint import pprint
 import requests
 import attr
 from hashlib import sha1
@@ -55,9 +56,15 @@ class Orthanc(Endpoint, RestAgent, Serializable):
         return r is not None
 
     def get(self, oid: UID, dlvl: DLv = DLv.STUDY, binary: bool = False, **kwargs) -> Dixel:
-        resource = f"{dlvl.opath()}/{oid}"
+        if dlvl == DLv.INSTANCE:
+            resource = f"{dlvl.opath()}/{oid}/tags?simplify"
+        else:
+            resource = f"{dlvl.opath()}/{oid}/shared-tags?simplify"
         tags = self.request(resource, **kwargs)
-        d = Dixel.from_tags(tags)
+
+        # pprint(tags)
+
+        d = Dixel.from_tags(tags, dlvl=dlvl)
         if binary:
             if dlvl > DLv.INSTANCE:
                 route = "archive"
@@ -92,7 +99,7 @@ class Orthanc(Endpoint, RestAgent, Serializable):
         return r
 
     def inventory(self, dlvl: DLv = DLv.STUDY, **kwargs) -> typ.List[UID]:
-        resource = f"{dlvl.to_orthanc_resource()}"
+        resource = f"{dlvl.opath()}"
         r = self.request(resource)
         return r
 
@@ -173,13 +180,13 @@ def get_dixel_oid(dixel: Dixel, dlvl: DLv = None) -> UID:
     _dlvl = dlvl or dixel.dlvl
     if not dixel.tags.get("PatientID"):
         raise KeyError("No patient ID, cannot predict the oid")
-    if dlvl == DLv.INSTANCE:
+    if _dlvl == DLv.INSTANCE:
         s = "|".join([dixel.tags["PatientID"], dixel.stuid, dixel.sruid, dixel.inuid])
-    elif dlvl == DLv.SERIES:
+    elif _dlvl == DLv.SERIES:
         s = "|".join([dixel.tags["PatientID"], dixel.stuid, dixel.sruid])
-    elif dlvl == DLv.STUDY:
+    elif _dlvl == DLv.STUDY:
         s = "|".join([dixel.tags["PatientID"], dixel.stuid])
-    elif dlvl == DLv.PATIENT:
+    elif _dlvl == DLv.PATIENT:
         s = dixel.tags["PatientID"]
     else:
         raise TypeError("Unknown dicom level for oid")

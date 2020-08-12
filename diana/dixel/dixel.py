@@ -75,7 +75,7 @@ class Dixel(DataItem):
             "mhash": self.mhash,
             "dhash": self.dhash,
             "bhash": self.bhash,
-            "dlvl": str(self.dlvl),
+            "dlvl": str(self.dlvl).upper(),
             "timestamp": str(self.timestamp)
         })
         if self.dlvl > DLv.INSTANCE:
