@@ -13,7 +13,7 @@ from diana.dixel import Dixel, InvalidDicomException
 from diana.services import DicomDirectory
 from .obs_orthanc import OrthancEventType as DicomEventType
 
-TEST_SHELF_FILE = os.path.expanduser("~/data/dcm_registry.pkl")
+TEST_SHELF_FILE = os.path.expanduser("/tmp/dcm_registry.pkl")
 NUM_KEY_CHARS = 10
 STABLE_TIMEOUT = timedelta(seconds=10)
 
