@@ -94,7 +94,7 @@ class Orthanc(Endpoint, RestAgent, Serializable):
         if not dixel.binary:
             raise ValueError("No file data found")
         resource = "instances"
-        # headers = {'content-type': 'application/dicom'}
+        headers = {'content-type': 'application/dicom'}
         r = self.request(resource, RTy.POST, data=dixel.binary)
         return r
 
@@ -126,6 +126,7 @@ class Orthanc(Endpoint, RestAgent, Serializable):
             # Anonymizing an instance returns entire new file as bytes
             # It must be resubmitted as a new image to access it from
             # the Orthanc instance
+            # Note: Doesn't look like this is true anymore
             return r
 
     def modify(self, oid: UID, dlvl: DLv = DLv.STUDY,

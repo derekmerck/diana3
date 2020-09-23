@@ -162,9 +162,9 @@ class Dixel(DataItem):
             pixels = None
 
         if not "StudyInstanceUID" in tags or \
-            not "SeriesInstanceUID" in tags or \
-            not "SOPInstanceUID" in tags:
-            print(tags)
+           not "SeriesInstanceUID" in tags or \
+           not "SOPInstanceUID" in tags:
+            print(f"Missing critical tags in {fp}")
             raise InvalidDicomException
 
         d = cls(dlvl=DLv.INSTANCE,
@@ -196,14 +196,18 @@ class Dixel(DataItem):
 
     def add_child(self, child: "Dixel"):
         self.children.add(child)
+        self.stale_dhash = self.dhash
         if self.dhash is None:
             self.dhash = child.dhash
         else:
             self.dhash = xor(self.dhash, child.dhash)
+        self.stale_bhash = self.bhash
         if self.bhash is None:
             self.bhash = child.bhash
         else:
             self.bhash = xor(self.bhash, child.bhash)
+
+        self.update_ts = datetime.now()
 
     @classmethod
     def from_child(cls, child: "Dixel", dlvl: DLv = None) -> "Dixel":

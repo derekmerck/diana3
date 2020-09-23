@@ -1,27 +1,10 @@
 from pprint import pprint
-import os
-import pickle
 from diana.dicom import DLv
 from diana.dixel import Dixel, orthanc_sham_map
 from diana.services import DicomDirectory, Orthanc
 from dcm_registry import DicomRegistry
 
-
-# registry with caching
-def mk_registry(root_p, pkl_fn, rebuild=False):
-
-    if not rebuild and os.path.isfile(pkl_fn):
-        with open(pkl_fn, "rb") as pkl:
-            return pickle.load(pkl)
-
-    else:
-        R = DicomRegistry()
-        R.index_directory(rootp=root_p)
-
-        with open(pkl_fn, "wb") as pkl:
-            pickle.dump(R, pkl)
-
-        return R
+UPDATE_CACHE = False
 
 
 def anonymize_and_upload(R: DicomRegistry, D: DicomDirectory, O: Orthanc):
@@ -39,7 +22,7 @@ def anonymize_and_upload(R: DicomRegistry, D: DicomDirectory, O: Orthanc):
         m = orthanc_sham_map(
             stu.mhash,
             stu.dhash,
-            patient_id=stu.tags["PatientID"],
+            patient_id=stu.tags.get("PatientID", "UNKNOWN"),
             stu_dt=stu.timestamp,
 
             ser_mhash = ser.mhash,
@@ -52,29 +35,32 @@ def anonymize_and_upload(R: DicomRegistry, D: DicomDirectory, O: Orthanc):
         )
 
         dd = D.get(d.meta["fp"], binary=True)
-        O.put(dd)
-        O.anonymize(dd.oid(), replacement_map=m)  # Study level doesn't return image
-        O.delete(dd.oid(), dlvl=DLv.INSTANCE)
+        r = O.put(dd)  # If no Patient ID, need to use returned value
+        oid = r['ID']
+        print(f"Putting {dd.main_tags()} in {oid}")
+        O.anonymize(oid, replacement_map=m)  # Anon inst no longer returns image?
+        O.delete(oid, dlvl=DLv.INSTANCE)
 
 
 if __name__ == "__main__":
 
-    ROOT_PATH = "~/data/dcm"
-    R = mk_registry(ROOT_PATH, "registry.pkl", rebuild=True)
+    ROOT_PATH = "~/data/incoming"
+    R = DicomRegistry(shelf_reset=False)
+    if UPDATE_CACHE:
+        R.index_directory(rootp=ROOT_PATH)  # This gets cached
 
-    print("\nSERIES")
-    print("-----------------")
-    pprint(R.find({"dlvl": DLv.SERIES}))
+    # print("\nSERIES")
+    # print("-----------------")
+    # pprint(R.find({"dlvl": DLv.SERIES}))
+    #
+    # print("\nSTUDIES")
+    # print("-----------------")
+    # pprint(R.find({"dlvl": DLv.STUDY}))
 
-    print("\nSTUDIES")
-    print("-----------------")
-    pprint(R.find({"dlvl": DLv.STUDY}))
-
-    exit()
-
-    O = Orthanc()
+    O = Orthanc(url="http://siren:8042")
+    print( O.statistics() )
     O.clear()
+    print( O.statistics() )
 
     D = DicomDirectory(root=ROOT_PATH)
-
     anonymize_and_upload(R, D, O)

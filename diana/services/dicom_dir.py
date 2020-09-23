@@ -1,9 +1,9 @@
+import typing as typ
 import os
 import attr
 from libsvc.endpoint import Endpoint, Serializable
 from libsvc.utils import PathLike, mk_path
 from diana.dixel.dixel import Dixel
-
 
 
 @attr.s(auto_attribs=True, hash=False)
@@ -14,9 +14,9 @@ class DicomDirectory(Endpoint, Serializable):
     def status(self):
         return os.path.isdir(self.root)
 
-    def get(self, fp: PathLike, binary: bool = False, ignore_errors=False) -> Dixel:
+    def get(self, fp: PathLike, binary: bool = False, ignore_errors=False, bhash_validator: typ.Callable=None) -> Dixel:
         _fp = self.root / fp
-        d = Dixel.from_file(_fp, cache_binary=binary, ignore_errors=ignore_errors)
+        d = Dixel.from_file(_fp, cache_binary=binary, ignore_errors=ignore_errors, bhash_validator=bhash_validator)
         return d
 
     def put(self, dixel: Dixel, fp: PathLike = None, **kwargs):
