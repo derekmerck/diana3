@@ -1,54 +1,73 @@
+from libsvc.daemon import Watcher, Trigger, Event, FileEventType
+from diana.daemons import ObservableDicomDir, DicomEventType, DicomRegistry
+from diana.services import Orthanc
+from diana.dicom import DcmUIDMint
 
-"""
-There are two "watching" routes
+# CONFIG
 
-DcmDir -- add to registry
-Registry -- stable study
-
-Watch new file arrive
-Once study is stable, compute study anonymization hash
-collect all instances
-  - upload each
-  - anonymize each
-Send study available email
-
-"""
-
-from libsvc.daemon import ObservableDirectory
-from diana.services import
-
-dcm_dir = "/data/incomming"
-
-D = ObservableDirectory(root=dcm_dir)
+dcm_dir_kwargs = {
+    "root": "/data/incomming"
+}
+registry_kwargs = {
+    "url": "redis:6379"
+}
+orthanc_kwargs = {
+    "url": "http://orthanc-queue:8042",
+    "user": "orthanc",
+    "password": "passw0rd"
+}
+orthanc_archive_peer = "orthanc-hobit"
 
 
-def watcher():
-    mock = MockObservable()
+if __name__ == "__main__":
 
-    # When "mock" generates a "CHANGED" event, print the data
-    t0 = Trigger(
-        source=mock,
-        event_type=EventType.CHANGED,
+    D = ObservableDicomDir(**dcm_dir_kwargs)
+    R = DicomRegistry(**registry_kwargs)
+    Q = Orthanc(**orthanc_kwargs)
+    # M = DcmUIDMint()
+    # N = NotificationDispatcher()
+
+    def handle_file(event: Event):
+        fp = event.data
+        dcm = D.get(fp, bhash_validator=R.bhashes, binary=True)
+        if dcm:
+            R.register(dcm)   # Sets mhash, dhash, info
+            Q.put(dcm)
+
+    t_file = Trigger(
+        source=D,
+        event_type=FileEventType.INSTANCE_ADDED,
         handler=print
+        # handle=handle_file
     )
 
-    # When "mock" generates a "CHANGED" event, call a handler on
-    # the source with additional kwargs
-    t1 = Trigger(
-        source=mock,
-        event_type=EventType.CHANGED,
-        handler=partial(mock.changed_handler, var="GOODBYE")
-    )
+    W = Watcher(triggers=[t_file])
 
-    D = Watcher(triggers=[t0, t1])
-    D.handle_all()
+    W.run()
 
-    process = Process(target=D.run, args=())
-    process.start()
+    # def handle_study(event: Event):
+    #     oid = event.data
+    #     dx = Q.get(oid, view="meta")
+    #     dhash = R.dhash(mhash=dx.mhash)
+    #     new_duids = M.content_hash_uid(hex_mhash=dx.mhash, hex_dhash=dhash)
+    #     repl_map = Orthanc.anonymization_map(new_duids)
+    #     new_oid = Q.anonymize(oid, replacement_map=repl_map)
+    #     new_dx = Q.get(new_oid, view="meta")
+    #     Q.send(new_oid, "orthanc-hobit")
+    #
+    #     audit_trail = R.info(mhash=dx.mhash)
+    #     channels = func(audit_trail)
+    #     N.send("study_available", new_dx, channels)
+    #
 
-    time.sleep(5.0)  # Should print hello a few times, once a second
+    # # Study becomes stable in the queue
+    # t_study = Trigger(
+    #     source=Q,
+    #     event_type=DicomEventType.STUDY_STABLE,
+    #     handler=print
+    #     # handle=handle_study
+    # )
 
-    process.terminate()
-
-    captured = capsys.readouterr()
-    assert "var=GOODBYE and data=hello" in captured.out
+    # W = Watcher(triggers=[t_file, t_study])
+    #
+    # W.run()

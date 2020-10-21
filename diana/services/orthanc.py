@@ -1,6 +1,7 @@
 import typing as typ
 from pprint import pprint
 import requests
+from io import BytesIO
 import attr
 from hashlib import sha1
 from libsvc.endpoint import Endpoint, Serializable, UID
@@ -55,7 +56,19 @@ class Orthanc(Endpoint, RestAgent, Serializable):
         r = self.request(resource, **kwargs)
         return r is not None
 
-    def get(self, oid: UID, dlvl: DLv = DLv.STUDY, binary: bool = False, **kwargs) -> Dixel:
+    def get(self,
+            oid: UID,
+            dlvl: DLv = DLv.STUDY,
+            binary: bool = False,
+            view: str = None,
+            **kwargs) -> typ.Union[Dixel, typ.Dict]:
+
+        # Want to get the raw Orthanc metadata w child info
+        if view == "raw":
+            resource = f"{dlvl.opath()}/{oid}"
+            metadata = self.request(resource, **kwargs)
+            return metadata
+
         if dlvl == DLv.INSTANCE:
             resource = f"{dlvl.opath()}/{oid}/tags?simplify"
         else:
@@ -88,14 +101,17 @@ class Orthanc(Endpoint, RestAgent, Serializable):
     def rfind(self, query: typ.Dict, remote_node: str, retrieve=False) -> typ.List[typ.Dict]:
         raise NotImplementedError
 
-    def put(self, dixel: Dixel, *args, **kwargs):
+    def put(self, dixel: Dixel = None, raw: str = None, *args, **kwargs):
+        resource = "instances"
+        headers = {'content-type': 'application/dicom'}
+        if raw:
+            r = self.request(resource, RTy.POST, data=raw, headers=headers)
+            return r
         if dixel.dlvl > DLv.INSTANCE:
             raise TypeError("Can only send instance objects")
         if not dixel.binary:
             raise ValueError("No file data found")
-        resource = "instances"
-        headers = {'content-type': 'application/dicom'}
-        r = self.request(resource, RTy.POST, data=dixel.binary)
+        r = self.request(resource, RTy.POST, data=dixel.binary, headers=headers)
         return r
 
     def delete(self, oid: UID, dlvl: DLv = DLv.STUDY, **kwargs) -> bool:
@@ -196,6 +212,14 @@ def get_dixel_oid(dixel: Dixel, dlvl: DLv = None) -> UID:
         s = dixel.tags["PatientID"]
     else:
         raise TypeError("Unknown dicom level for oid")
+    h = sha1(s.encode("UTF8"))
+    d = h.hexdigest()
+    s = '-'.join(d[i:i + 8] for i in range(0, len(d), 8))
+    return s
+
+
+def oid_from(list):
+    s = "|".join(list)
     h = sha1(s.encode("UTF8"))
     d = h.hexdigest()
     s = '-'.join(d[i:i + 8] for i in range(0, len(d), 8))

@@ -105,6 +105,19 @@ class Dixel(DataItem):
         else:
             raise ValueError
 
+    # # UID hash is a shortcut mhash if duids can be trusted to be unique
+    # @property
+    # def uhash(self) -> str:
+    #     if self.dlvl == DLv.INSTANCE:
+    #         _bytes = self.inuid.encode("utf8")
+    #     elif self.dlvl == DLv.SERIES:
+    #         _bytes = self.sruid.encode("utf8")
+    #     elif self.dlvl == DLv.STUDY:
+    #         _bytes = self.stuid.encode("utf8")
+    #     else:
+    #         raise ValueError
+    #     return hashlib.sha224( _bytes ).hexdigest()
+
     # Can get series or study uid str
     def get_uid_str(self, dlvl: DLv = None):
         _dlvl = dlvl or self.dlvl
@@ -165,6 +178,8 @@ class Dixel(DataItem):
            not "SeriesInstanceUID" in tags or \
            not "SOPInstanceUID" in tags:
             print(f"Missing critical tags in {fp}")
+            if ignore_errors:
+                return
             raise InvalidDicomException
 
         d = cls(dlvl=DLv.INSTANCE,

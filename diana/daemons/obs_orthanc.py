@@ -6,8 +6,8 @@ from libsvc.endpoint import Serializable
 from libsvc.daemon import ObservableMixin, Event
 from diana.services import Orthanc
 
+# orthanc:8042/changes looks like this:
 """
-orthanc:8042/changes looks like this:
 {
    "Changes" : [
       {

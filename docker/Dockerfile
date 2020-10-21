@@ -7,7 +7,7 @@ RUN apt update \
 # This installs the package in user mode
 # RUN pip install git+https://github.com/derekmerck/diana3
 
-# This installs the package in developer mode, for easier local
+# This installs the package in developer mode, for easier local updates,
 # editing of scripts, etc.
 RUN git clone --recurse-submodules https://github.com/derekmerck/diana3 /opt/diana
 # For developer/editable installations, need to install the submodule separately (!)

@@ -14,6 +14,13 @@ class DicomLevel(IntEnum):
     PATIENT = 3
     COLLECTION = 4
 
+    @classmethod
+    def of(cls, name):
+        for dlvl in DicomLevel:
+            if name.upper() == dlvl.name.upper():
+                return dlvl
+        raise KeyError(f"No such dlvl {name}")
+
     def __str__(self):
         return str(self.name).lower()
 
