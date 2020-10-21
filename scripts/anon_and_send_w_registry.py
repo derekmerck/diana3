@@ -19,6 +19,7 @@ import typing as typ
 from diana.dicom import DLv
 from diana.dixel import Dixel, orthanc_sham_map
 from diana.services import Orthanc, HashRegistry
+from diana.services.orthanc import oid_from
 
 STUDY_OID = "b95d5f41-584c5842-00e37835-6a99aeda-d016b2de"
 ORTHANC_QUEUE_URL = "http://localhost:8042"
@@ -62,7 +63,7 @@ def anonymize_and_send_w_registry(
             m = orthanc_sham_map(
                 study_dx.mhash,
                 study_dx.dhash,
-                patient_id=study_dx.tags.get("PatientID", "UNKNOWN"),
+                patient_id=study_dx.tags.get("PatientName", "UNKNOWN"),
                 stu_dt=study_dx.timestamp,
 
                 ser_mhash = ser_dx.mhash,
@@ -74,7 +75,6 @@ def anonymize_and_send_w_registry(
                 inst_dt = inst_dx.timestamp
             )
 
-            from diana.services.orthanc import oid_from
             s = [ m["Replace"]["PatientID"],
                   m["Replace"]["StudyInstanceUID"],
                   m["Replace"]["SeriesInstanceUID"],
