@@ -126,10 +126,21 @@ def anonymize_and_send_w_registry(
 
     H.shelve()
 
+def anon_and_push_all(queue: Orthanc,
+                      reg: HashRegistry,
+                      archive: Orthanc = None,
+                      clear_source: bool = False):
+
+    for oid in queue.inventory():
+        anonymize_and_send_w_registry(oid, queue, reg, archive, clear_source)
+
+
 
 if __name__ == "__main__":
 
     O = Orthanc(url=ORTHANC_QUEUE_URL)
     P = Orthanc(url=ORTHANC_PEER_URL)
     H = HashRegistry(cache_file=CACHE_FILE)
-    anonymize_and_send_w_registry(STUDY_OID, O, H, P, clear_source=CLEAR_SOURCE)
+    # anonymize_and_send_w_registry(STUDY_OID, O, H, P, clear_source=CLEAR_SOURCE)
+
+    anon_and_push_all(O, H, P, clear_source=CLEAR_SOURCE)
