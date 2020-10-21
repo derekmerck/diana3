@@ -20,8 +20,9 @@ from diana.dicom import DLv
 CLEAR_HASHES = False  # Reset hash registry
 CLEAR_DICOM  = False  # Reset orthanc data
 UPLOAD_DICOM = True  # Upload Dicom files
-ROOT_PATH    = "~/data/incoming"
-ORTHANC_URL  = "http://localhost:8042"
+ROOT_PATH    = "/data/incoming"
+ORTHANC_URL  = "http://orthanc-queue:8042"
+CACHE_FILE   = "/data/tmp/hashes.pkl"
 ANNOUNCMENT_INTERVAL = 50
 
 
@@ -71,7 +72,7 @@ def register_path(D: DicomDirectory,
 if __name__ == "__main__":
 
     D = DicomDirectory(root=ROOT_PATH)
-    H = HashRegistry(clear_cache=CLEAR_HASHES)
+    H = HashRegistry(clear_cache=CLEAR_HASHES, cache_file=CACHE_FILE)
     O = Orthanc(url=ORTHANC_URL)
     if CLEAR_DICOM:
         print("Clearing DICOM node")

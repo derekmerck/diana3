@@ -22,10 +22,10 @@ from diana.services import Orthanc, HashRegistry
 from diana.services.orthanc import oid_from
 
 STUDY_OID = "b95d5f41-584c5842-00e37835-6a99aeda-d016b2de"
-ORTHANC_QUEUE_URL = "http://localhost:8042"
-ORTHANC_PEER_URL = "http://localhost/hobit/"
+ORTHANC_QUEUE_URL = "http://orthanc-queue:8042"
+ORTHANC_PEER_URL = "http://orthanc-hobit:8042"
 # Peer must have "diana-hash" metadata name assigned
-CACHE_FILE = "/tmp/hashes.pik"
+CACHE_FILE = "/data/tmp/hashes.pkl"
 CLEAR_SOURCE = False
 ANNOUNCMENT_INTERVAL = 10
 
@@ -63,7 +63,9 @@ def anonymize_and_send_w_registry(
             m = orthanc_sham_map(
                 study_dx.mhash,
                 study_dx.dhash,
-                patient_id=study_dx.tags.get("PatientName", "UNKNOWN"),
+                patient_id=study_dx.tags.get("PatientID",
+                                             study_dx.tags.get("PatientName",
+                                                               "UNKNOWN")),
                 stu_dt=study_dx.timestamp,
 
                 ser_mhash = ser_dx.mhash,
