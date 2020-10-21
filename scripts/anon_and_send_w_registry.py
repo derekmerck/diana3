@@ -60,12 +60,19 @@ def anonymize_and_send_w_registry(
             inst_dx = O.get(inst_oid, dlvl=DLv.INSTANCE)
             inst_dx.dhash = H.get(inst_dx.mhash)["dhash"]
 
+            def best_pt_id(dx: Dixel):
+                candidate = dx.tags.get("PatientID", "")
+                if candidate != "":
+                    return candidate
+                candidate = dx.tags.get("PatientName", "")
+                if candidate != "":
+                    return candidate
+                return "UNKNOWN"
+
             m = orthanc_sham_map(
-                study_dx.mhash,
-                study_dx.dhash,
-                patient_id=study_dx.tags.get("PatientID",
-                                             study_dx.tags.get("PatientName",
-                                                               "UNKNOWN")),
+                stu_mhash=study_dx.mhash,
+                stu_dhash=study_dx.dhash,
+                patient_id=best_pt_id(study_dx),
                 stu_dt=study_dx.timestamp,
 
                 ser_mhash = ser_dx.mhash,
