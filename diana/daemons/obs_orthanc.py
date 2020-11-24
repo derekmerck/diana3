@@ -1,6 +1,7 @@
 
 import typing as typ
 from enum import Enum
+import requests
 import attr
 from libsvc.endpoint import Serializable
 from libsvc.daemon import ObservableMixin, Event
@@ -37,14 +38,18 @@ class OrthancEventType(Enum):
     PATIENT_STABLE = "patient_stable"
 
 
-@attr.s(auto_attribs=True)
-class ObservableOrthanc(Orthanc, ObservableMixin):
+@attr.s(auto_attribs=True, hash=False)
+class ObservableOrthanc(ObservableMixin, Orthanc):
     current_change: int = 0
 
     # Override default changes method to return a list of actionable events
     def changes(self, **kwargs) -> typ.List[Event]:
         params = { 'since': self.current_change, 'limit': 0 }
-        r: typ.Dict = self.request("changes", params=params)
+
+        try:
+            r: typ.Dict = self.request("changes", params=params)
+        except requests.exceptions.ConnectionError:
+            return []
 
         events = []
         for change in r["Changes"]:

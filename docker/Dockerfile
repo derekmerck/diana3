@@ -15,3 +15,5 @@ RUN pip install -e /opt/diana/libsvc /opt/diana
 
 # Test that it works
 #RUN diana-cli --version
+
+CMD tail -f /dev/null
