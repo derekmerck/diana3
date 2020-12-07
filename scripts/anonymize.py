@@ -22,7 +22,8 @@ def anonymize_and_upload(R: DicomRegistry, D: DicomDirectory, O: Orthanc):
         m = orthanc_sham_map(
             stu.mhash,
             stu.dhash,
-            patient_id=stu.tags.get("PatientID", "UNKNOWN"),
+            # Try patient id first, fall back to patient name, or use "UNKNOWN"
+            patient_id=stu.tags.get("PatientID", stu.tags.get("PatientName", "UNKNOWN")),
             stu_dt=stu.timestamp,
 
             ser_mhash = ser.mhash,
