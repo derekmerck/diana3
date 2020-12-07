@@ -37,6 +37,7 @@ class Dixel(DataItem):
 
     main_tag_keys_ = {
         DLv.STUDY: ["PatientID",       # Not guaranteed exists/unique
+                    "PatientName",     # Not guaranteed exists/unique
                     "StudyInstanceUID",
                     "AccessionNumber", # Not guaranteed exists/unique
                     "StudyDate",
